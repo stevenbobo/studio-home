@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <import resource="classpath:spring/applicationContext.xml"/>
+    <context:annotation-config/>
+
+
+
+    <bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
+        <property name="interceptors">
+            <list>
+                <!--<bean class="com.zb.jnlxc.aop.LoginInterceptor" />-->
+            </list>
+        </property>
+    </bean>
+
+    <!-- 上传拦截，如最大上传值及最小上传值 -->
+    <bean id="multipartResolver"
+          class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!-- one of the properties available; the maximum file size in bytes -->
+        <property name="defaultEncoding" value="utf-8"></property>
+        <property name="maxUploadSize" value="1000000" />
+    </bean>
+     <!--
+    <bean id="exceptionResolver"
+          class="com.zb.jnlxc.viewResolver.MappingGsonView" />  -->
+    <bean id="velocityLayoutViewResolver"
+          class="org.springframework.web.servlet.view.velocity.VelocityLayoutViewResolver">
+        <property name="viewClass"
+                  value="org.springframework.web.servlet.view.velocity.VelocityLayoutView"/>
+        <property name="layoutUrl" value="/WEB-INF/content/layout/Default.vm"/>
+        <property name="cache" value="false"/>
+        <property name="prefix" value="/WEB-INF/content/"/>
+        <property name="suffix" value=".vm"/>
+        <property name="dateToolAttribute" value="datetool"/>
+        <property name="contentType" value="text/html;charset=UTF-8"/>
+        <property name="exposeSessionAttributes" value="true"/>
+        <property name="toolboxConfigLocation" value="/WEB-INF/toolbox.xml"/>
+        <property name="exposeSpringMacroHelpers" value="true"/>
+        <property name="exposeRequestAttributes" value="true"/>
+        <property name="allowSessionOverride" value="true"/>
+    </bean>
+
+    <bean id="exceptionResolver"
+          class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+        <property name="defaultErrorView" value="Error"/>
+        <property name="warnLogCategory" value="WARN"/>
+        <property name="exceptionMappings">
+            <props>
+                <prop key="org.springframework.security.core.AuthenticationException">user/login</prop>
+            </props>
+        </property>
+        <property name="defaultStatusCode" value="200"/>
+    </bean>
+
+</beans>
